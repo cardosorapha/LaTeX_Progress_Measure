@@ -19,13 +19,13 @@ You can execute the python script manually, but I have also included a pre-commi
 1) Clone this repository
 
 ```
-git clone https://github.com/cardosorapha/LaTeX\_Progress\_Measure.git
+git clone https://github.com/cardosorapha/LaTeX_Progress_Measure.git
 ```
 
 2) Navigate to the main repository folder
 
 ```
-cd LaTeX\_Progress\_Measure
+cd LaTeX_Progress_Measure
 ```
 
 3) Make the pre-commit hook executable
