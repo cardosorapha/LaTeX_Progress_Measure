@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# You have to copy this script to the folder .git/hooks in your repository
+# Then you must give it execution rights with chmod +x .git/hooks/pre-commit
+
+echo "Pre-commit hook activated"
+echo $(pwd)
+
+# When this hook is executed, we are in the git main directory
+# If you change the file organization, you have to change it here
+
+# Script to update the image and table
+python ./scripts/update_measures.py || {
+			echo "Python script failed, cancelling commit . . ."
+			exit 1
+				}
+
+# Adding the new image and table to this commit
+# If you change the target location of those files, you have to change it here
+git add ./scripts/*
+
+echo "End of pre-commit hook"
+exit 0
