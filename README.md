@@ -40,7 +40,9 @@ chmod +x ./scripts/pre-commit
 cp ./scripts/pre-commit .git/hooks/pre-commit
 ```
 
-Steps 1-4 only need to be executed once. Then, you can work with your files normally. To trigger the pre-commit hook, use
+5) Change the variables in `scripts/update_measures.py` to adapt to your project organization.
+
+Steps 1-5 only need to be executed once. Then, you can work with your files normally. To trigger the pre-commit hook, use
 
 ```
 git commit
