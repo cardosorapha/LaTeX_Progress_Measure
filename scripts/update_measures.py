@@ -185,16 +185,16 @@ def plotting(table, image_path):
 # This function converts a return string to int
 # If it's invalid, assumes zero
 def int_zero_assumption(value):
-	value_invalid = False
-	try:
-	    value = int(value)
-	except:
-	    print("Value was invalid number, assume zero")
-	    value_invalid = True
-	finally:
-	    if value_invalid:
-		value = 0
-	return value		
+    value_invalid = False
+    try:
+        value = int(value)
+    except:
+        print("Value was invalid number, assume zero")
+        value_invalid = True
+    finally:
+        if value_invalid:
+           value = 0
+    return value		
 
 
 if __name__ == "__main__":
