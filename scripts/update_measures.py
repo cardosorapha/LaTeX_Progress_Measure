@@ -183,7 +183,7 @@ def plotting(table, image_path):
     return 0
 
 # This function converts a return string to int
-# If it's invalid, assumes zero
+# If it's invalid, assumes zero 
 def int_zero_assumption(value):
     value_invalid = False
     try:
