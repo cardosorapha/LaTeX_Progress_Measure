@@ -12,14 +12,16 @@ def main():
     ###############################################################
     
     ############ Change these variables to the desired files ##########
-    table_path = "./table_test.csv"
+    table_path = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/scripts/table_test.csv"
     
-    image_path = './progress_plot.png'
+    image_path = '/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/scripts/progress_plot.png'
     
-    main_tex_folder = "../"
+    main_tex_folder = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/"
     main_tex_name = "main.tex"
     
-    main_pdf_path = "../main.pdf"
+    main_pdf_path = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/main.pdf"
+    
+    git_folder = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/"
     ###################################################################
     
     table_exists = exists(table_path)
@@ -35,20 +37,19 @@ def main():
     
     # Calculating the first column
     days_from_init = get_days(init_date)
-    print(days_from_init)
+    print(f"Today it has been {days_from_init} days since the start of the tracking.")
     
     # Calculating the second column
     words = get_words(main_tex_folder,main_tex_name)
-    print(words)
+    print(f"This commit has a total of {words} words.")
     
     # Calculating the third column
     pages = get_pages(main_pdf_path)
-    print(pages)
+    print(f"This commit has a total of {pages} pages.")
     
     # Calculating the fourth column
-    
-    #todo
-    diffs = 10
+    diffs = get_diffs(git_folder)
+    print(f"This commit has a total of {diffs} changes.")
     
     
     # Read the whole table
@@ -65,17 +66,29 @@ def main():
         # and should be an empty (to mimic the fact that it didn't find a match)
     	index_redo = np.array([])
     
-    # this is the new line that we are going to include
-    # you can customize it to match the header variable
-    newline = np.array([days_from_init,pages,words,diffs], dtype=str)
-    
+    # you have to change this part if you want to add new stuff    
     if index_redo.size == 0:
+        newline = np.array([days_from_init,pages,words,diffs], dtype=str)
         table = np.vstack([table, newline])
     else:
         # this col should not be overriden
         # but rather added to the previous
         old_diffs = table[index_redo.item(),3]
-        newline[3] = diffs + int(old_diffs)
+
+        old_diffs_invalid = False
+        try:
+            old_diffs = int(old_diffs)
+        except:
+            print("Old diffs was invalid number, assume zero")
+            old_diffs_invalid = True
+        finally:
+            if old_diffs_invalid:
+                old_diffs = "0"
+        
+        diff_sum = int(diffs) + int(old_diffs)
+        newline = np.array([days_from_init,pages,words,diff_sum], dtype=str)
+
+
         table[index_redo.item(),:] = newline
     
     # saving the new array
@@ -83,7 +96,13 @@ def main():
     
     
     plotting(table,image_path)
-
+    
+    print(f"Table written at:\n\t{table_path}")
+    print(f"Image written at:\n\t{image_path}")  
+    
+    return 0
+    
+######################## Helper functions ###########################    
 def get_days(date_init):
     cur_date = date.today()
     if cur_date < date_init:
@@ -112,8 +131,8 @@ def get_words(main_tex_folder,main_tex_name):
 
 def get_pages(main_pdf_path):
     
-    # texcount is found in the latex installation
-    # it will give a report of words with the sum
+    # pdfinfo is a poppler util
+    # it will give a metadata report of a pdf
     pdfinfo = ["pdfinfo", main_pdf_path]
     # I use awk to filter just the sum
     awk = ["awk", "/Pages:/ {print $NF}"]
@@ -127,6 +146,19 @@ def get_pages(main_pdf_path):
     return pages
 
 def get_diffs(git_folder):
+    # diff is a command from the git package
+    # it will tell you the additions and deletions of a set of files
+    # the --shortstat argument makes the report a single line
+    diff = ["git", "diff","--shortstat", git_folder]
+    # I use awk to filter just the sum:
+    # files changes + insertions + deletions
+    awk = ["awk", "{print $0+$4+$6}"]
+    
+    p = subprocess.Popen(diff, stdout=subprocess.PIPE)
+    output = subprocess.check_output(awk, stdin=p.stdout)
+    p.wait()
+
+    diffs = output.decode().rstrip()    
     return diffs
 
 def plotting(table, image_path):
@@ -162,7 +194,8 @@ def plotting(table, image_path):
 
 
 if __name__ == "__main__":
+    print("################### ~~ LaTeX Report Tracker ~~ ###################")
     main()
-    
+    print("################### ~~~~ End of execution ~~~~ ###################")
     
     
