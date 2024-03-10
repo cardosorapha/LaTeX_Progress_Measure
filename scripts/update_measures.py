@@ -75,17 +75,7 @@ def main():
         # but rather added to the previous
         old_diffs = table[index_redo.item(),3]
 
-        old_diffs_invalid = False
-        try:
-            old_diffs = int(old_diffs)
-        except:
-            print("Old diffs was invalid number, assume zero")
-            old_diffs_invalid = True
-        finally:
-            if old_diffs_invalid:
-                old_diffs = "0"
-        
-        diff_sum = int(diffs) + int(old_diffs)
+        diff_sum = int_zero_assumption(diffs) + int_zero_assumption(old_diffs)
         newline = np.array([days_from_init,pages,words,diff_sum], dtype=str)
 
 
@@ -191,6 +181,20 @@ def plotting(table, image_path):
     plt.close()
     
     return 0
+
+# This function converts a return string to int
+# If it's invalid, assumes zero
+def int_zero_assumption(value):
+	value_invalid = False
+	try:
+	    value = int(value)
+	except:
+	    print("Value was invalid number, assume zero")
+	    value_invalid = True
+	finally:
+	    if value_invalid:
+		value = 0
+	return value		
 
 
 if __name__ == "__main__":
