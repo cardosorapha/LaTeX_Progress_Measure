@@ -139,7 +139,7 @@ def get_diffs(git_folder):
     # diff is a command from the git package
     # it will tell you the additions and deletions of a set of files
     # the --shortstat argument makes the report a single line
-    diff = ["git", "diff","--shortstat", git_folder]
+    diff = ["git", "diff", "HEAD", "--shortstat", git_folder]
     # I use awk to filter just the sum:
     # files changes + insertions + deletions
     awk = ["awk", "{print $0+$4+$6}"]
