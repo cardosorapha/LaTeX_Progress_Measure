@@ -97,9 +97,7 @@ def get_days(date_init):
     cur_date = date.today()
     if cur_date < date_init:
         raise Exception("Init date has to come before or equal to today.")
-        return None
-    else:
-        return (cur_date - date_init).days
+    return (cur_date - date_init).days
 
 def get_words(main_tex_folder,main_tex_name):
     # assumes that the main tex file is located at
