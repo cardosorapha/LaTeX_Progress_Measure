@@ -1,9 +1,26 @@
+""""
+This script updates a table with the number of pages, words, and changes in a LaTeX document.
+It also plots the data and saves the plot as an image.
+
+The script uses the following external commands:
+- texcount: to count the number of words in a LaTeX document.
+- pdfinfo: to count the number of pages in a PDF file.
+- git: to count the number of file changes, insertions, and deletions in a git repository.
+
+The script also uses the following Python packages:
+- numpy: to handle the table data.
+- matplotlib: to plot the data and save the plot as an image.
+
+The script is intended to be used as a pre-commit hook in a git repository.
+"""
+
 import csv
-import subprocess
-import os
 from datetime import date
-import numpy as np
+import os
+import subprocess
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 ############ Change this variable to your starting day ########
 INIT_DATE = date(2024,3,7)
