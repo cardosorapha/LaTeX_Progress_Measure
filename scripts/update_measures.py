@@ -5,30 +5,30 @@ from datetime import date
 import numpy as np
 import matplotlib.pyplot as plt
 
+############ Change this variable to your starting day ########
+INIT_DATE = date(2024,3,7)
+###############################################################
+
+############ Change these variables to the desired files ##########
+TABLE_FILE_PATH = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/scripts/table_test.csv"
+
+IMAGE_FILE_PATH = '/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/scripts/progress_plot.png'
+
+MAIN_TEX_FOLDER_PATH = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/"
+MAIN_TEX_FILENAME = "main.tex"
+
+MAIN_PDF_FILE_PATH = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/main.pdf"
+
+GIT_FOLDER_PATH = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/"
+###################################################################
 
 def main():
-    ############ Change this variable to your starting day ########
-    init_date = date(2024,3,7)
-    ###############################################################
 
-    ############ Change these variables to the desired files ##########
-    table_path = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/scripts/table_test.csv"
-
-    image_path = '/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/scripts/progress_plot.png'
-
-    main_tex_folder = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/"
-    main_tex_name = "main.tex"
-
-    main_pdf_path = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/main.pdf"
-
-    git_folder = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/"
-    ###################################################################
-
-    table_exists = exists(table_path)
+    table_exists = exists(TABLE_FILE_PATH)
 
     # This part initializes the table if it doesn't exist
     if not table_exists:
-        with open(table_path, 'w', newline='', encoding="utf8") as file:
+        with open(TABLE_FILE_PATH, 'w', newline='', encoding="utf8") as file:
             writer = csv.writer(file)
             # You can customize other fields you want to
             # monitor in this part
@@ -36,24 +36,24 @@ def main():
             writer.writerow(header)
 
     # Calculating the first column
-    days_from_init = get_days(init_date)
+    days_from_init = get_days(INIT_DATE)
     print(f"Today it has been {days_from_init} days since the start of the tracking.")
 
     # Calculating the second column
-    words = get_words(main_tex_folder,main_tex_name)
+    words = get_words(MAIN_TEX_FOLDER_PATH,MAIN_TEX_FILENAME)
     print(f"This commit has a total of {words} words.")
 
     # Calculating the third column
-    pages = get_pages(main_pdf_path)
+    pages = get_pages(MAIN_PDF_FILE_PATH)
     print(f"This commit has a total of {pages} pages.")
 
     # Calculating the fourth column
-    diffs = get_diffs(git_folder)
+    diffs = get_diffs(GIT_FOLDER_PATH)
     print(f"This commit has a total of {diffs} changes.")
 
 
     # Read the whole table
-    table = np.loadtxt(table_path,
+    table = np.loadtxt(TABLE_FILE_PATH,
                      delimiter=",", dtype=str)
 
     # Check if I have previous data on this day
@@ -81,13 +81,13 @@ def main():
         table[index_redo.item(),:] = newline
 
     # saving the new array
-    np.savetxt(table_path, table, delimiter=',', fmt='%s')
+    np.savetxt(TABLE_FILE_PATH, table, delimiter=',', fmt='%s')
 
 
-    plotting(table,image_path)
+    plotting(table,IMAGE_FILE_PATH)
 
-    print(f"Table written at:\n\t{table_path}")
-    print(f"Image written at:\n\t{image_path}")
+    print(f"Table written at:\n\t{TABLE_FILE_PATH}")
+    print(f"Image written at:\n\t{IMAGE_FILE_PATH}")
 
     return 0
 
