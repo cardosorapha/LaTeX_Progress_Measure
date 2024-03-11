@@ -158,7 +158,7 @@ def plotting(table, image_path):
 
     plt.rcParams.update({'font.size': 14})
 
-    f, (axpages, axwords, axdiffs) = plt.subplots(3, 1, sharex=True,figsize=(10,10))
+    _, (axpages, axwords, axdiffs) = plt.subplots(3, 1, sharex=True,figsize=(10,10))
 
     axpages.plot(plot_days,plot_pages)
     axpages.set_ylabel("Total pages")
