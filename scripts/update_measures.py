@@ -28,7 +28,7 @@ def main():
     
     # This part initializes the table if it doesn't exist
     if not table_exists:
-        with open(table_path, 'w', newline='') as file:
+        with open(table_path, 'w', newline='', encoding="utf8") as file:
             writer = csv.writer(file)
             # You can customize other fields you want to 
             # monitor in this part
