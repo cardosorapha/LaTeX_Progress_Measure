@@ -67,7 +67,7 @@ def main():
     print(f"Today it has been {days_from_init} days since the start of the tracking.")
 
     # Calculating the second column
-    words = get_words(MAIN_TEX_FOLDER_PATH,MAIN_TEX_FILENAME)
+    words = get_words(MAIN_TEX_FOLDER_PATH, MAIN_TEX_FILENAME)
     print(f"This commit has a total of {words} words.")
 
     # Calculating the third column
@@ -80,8 +80,7 @@ def main():
 
 
     # Read the whole table
-    table = np.loadtxt(TABLE_FILE_PATH,
-                     delimiter=",", dtype=str)
+    table = np.loadtxt(TABLE_FILE_PATH, delimiter=",", dtype=str)
 
     # Check if I have previous data on this day
     # If zero, no replace is necessary, should append
@@ -95,7 +94,7 @@ def main():
 
     # you have to change this part if you want to add new stuff
     if index_redo.size == 0:
-        newline = np.array([days_from_init,pages,words,diffs], dtype=str)
+        newline = np.array([days_from_init, pages, words,diffs], dtype=str)
         table = np.vstack([table, newline])
     else:
         # this col should not be overriden
@@ -103,7 +102,7 @@ def main():
         old_diffs = table[index_redo.item(),3]
 
         diff_sum = int_zero_assumption(diffs) + int_zero_assumption(old_diffs)
-        newline = np.array([days_from_init,pages,words,diff_sum], dtype=str)
+        newline = np.array([days_from_init, pages, words, diff_sum], dtype=str)
 
         table[index_redo.item(),:] = newline
 
