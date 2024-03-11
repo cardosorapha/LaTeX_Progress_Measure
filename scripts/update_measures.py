@@ -93,51 +93,95 @@ def main():
 
 ######################## Helper functions ###########################
 def get_days(date_init):
+    """
+    Calculates the number of days between the given initial date and the current date.
+
+    Args:
+        date_init (datetime.date): The initial date.
+
+    Returns:
+        int: The number of days between the initial date and the current date.
+
+    Raises:
+        ValueError: If the initial date is after the current date.
+    """
     cur_date = date.today()
     if cur_date < date_init:
         raise ValueError("Init date has to come before or equal to today.")
     return (cur_date - date_init).days
 
-def get_words(main_tex_folder,main_tex_name):
-    # assumes that the main tex file is located at
-    # ./main_tex_folder/main_tex_name
+def get_words(main_tex_folder: str, main_tex_name: str) -> str:
+    """
+    Get the total number of words in a LaTeX document.
 
-    # texcount is found in the latex installation
-    # it will give a report of words with the sum
+    Args:
+        main_tex_folder (str): The folder where the main LaTeX file is located.
+        main_tex_name (str): The name of the main LaTeX file.
+
+    Returns:
+        str: The total number of words in the LaTeX document.
+
+    Raises:
+        subprocess.CalledProcessError: If the `texcount` or `awk` commands fail to execute.
+
+    Note:
+        The `texcount` command is part of the TeX Live distribution.
+        `awk` is used to filter the sum of words from the texcount output.
+    """
     texcount = ["texcount", main_tex_name, "-inc", "-total", "-sum"]
-    # I use awk to filter just the sum
     awk = ["awk", "/Sum count:/ {print $NF}"]
 
-    p = subprocess.Popen(texcount, cwd = main_tex_folder, stdout=subprocess.PIPE)
+    p = subprocess.Popen(texcount, cwd=main_tex_folder, stdout=subprocess.PIPE)
     output = subprocess.check_output(awk, stdin=p.stdout)
     p.wait()
 
-    words = output.decode().rstrip()
+    return output.decode().rstrip()
 
-    return words
+def get_pages(main_pdf_path: str) -> str:
+    """
+    Get the number of pages in a PDF file.
 
-def get_pages(main_pdf_path):
+    Args:
+        main_pdf_path (str): The path to the main PDF file.
 
-    # pdfinfo is a poppler util
-    # it will give a metadata report of a pdf
+    Returns:
+        str: The number of pages in the PDF file.
+        
+    Raises:
+        subprocess.CalledProcessError: If the `pdfinfo` or `awk` commands fail to execute.
+    
+    Note:
+        The `pdfinfo` command is part of the poppler-utils package.
+        `awk` is used to filter the number of pages from the pdfinfo output.
+    """
     pdfinfo = ["pdfinfo", main_pdf_path]
-    # I use awk to filter just the sum
     awk = ["awk", "/Pages:/ {print $NF}"]
 
     p = subprocess.Popen(pdfinfo, stdout=subprocess.PIPE)
     output = subprocess.check_output(awk, stdin=p.stdout)
     p.wait()
 
-    pages = output.decode().rstrip()
+    return output.decode().rstrip()
 
-    return pages
+def get_diffs(git_folder: str) -> str:
+    """
+    Get the total number of file changes, insertions, and deletions in a git repository.
 
-def get_diffs(git_folder):
-    # diff is a command from the git package
-    # it will tell you the additions and deletions of a set of files
+    Args:
+        git_folder (str): The path to the git repository folder.
+
+    Returns:
+        str: The total number of file changes, insertions, and deletions.
+
+    Raises:
+        subprocess.CalledProcessError: If the git command or awk command fails.
+        
+    Note:
+        The `git` command is part of the git package.
+        `awk` is used to filter the sum of changes from the git output.
+    """
     # the --shortstat argument makes the report a single line
     diff = ["git", "diff", "HEAD", "--shortstat", git_folder]
-    # I use awk to filter just the sum:
     # files changes + insertions + deletions
     awk = ["awk", "{print $0+$4+$6}"]
 
@@ -145,11 +189,20 @@ def get_diffs(git_folder):
     output = subprocess.check_output(awk, stdin=p.stdout)
     p.wait()
 
-    diffs = output.decode().rstrip()    
-    return diffs
+    return output.decode().rstrip()
 
-def plotting(table, image_path):
+def plotting(table: np.ndarray, image_path: str) -> int:
+    """
+    Plot the data from the given table and save the plot as an image.
 
+    Parameters:
+        table (np.ndarray): The input table containing the data to be plotted.
+        image_path (str): The path where the plot image will be saved.
+
+    Returns:
+        int: 0 if the plot is successfully saved.
+
+    """
     plot_table = table[1:,:].astype(int)
     plot_days = plot_table[:,0]
     plot_pages = plot_table[:,1]
@@ -179,9 +232,17 @@ def plotting(table, image_path):
 
     return 0
 
-# This function converts a return string to int
-# If it's invalid, assumes zero
-def int_zero_assumption(value):
+def int_zero_assumption(value: str) -> int:
+    """
+    Converts the given value to an integer. If the value is not a valid number,
+    it assumes zero and returns it.
+
+    Args:
+        value (str): The value to be converted to an integer.
+
+    Returns:
+        int: The converted integer value or zero if the value is not a valid number.
+    """
     try:
         return int(value)
     except ValueError:
