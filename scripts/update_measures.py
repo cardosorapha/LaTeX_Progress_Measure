@@ -3,15 +3,24 @@ This script updates a table with the number of pages, words, and changes in a La
 It also plots the data and saves the plot as an image.
 
 The script uses the following external commands:
-- texcount: to count the number of words in a LaTeX document.
-- pdfinfo: to count the number of pages in a PDF file.
-- git: to count the number of file changes, insertions, and deletions in a git repository.
+- `texcount`: to count the number of words in a LaTeX document.
+- `pdfinfo`: to count the number of pages in a PDF file.
+- `git`: to count the number of file changes, insertions, and deletions in a git repository.
 
 The script also uses the following Python packages:
 - numpy: to handle the table data.
 - matplotlib: to plot the data and save the plot as an image.
 
 The script is intended to be used as a pre-commit hook in a git repository.
+
+Set the following variables to the desired values:
+- INIT_DATE: the initial date to start tracking the document.
+- TABLE_FILE_PATH: the path to the table file.
+- IMAGE_FILE_PATH: the path to save the plot image.
+- MAIN_TEX_FOLDER_PATH: the folder where the main LaTeX file is located.
+- MAIN_TEX_FILENAME: the name of the main LaTeX file.
+- MAIN_PDF_FILE_PATH: the path to the main PDF file.
+- GIT_FOLDER_PATH: the path to the git repository folder.
 """
 
 import csv
