@@ -1,6 +1,6 @@
 import csv
 import subprocess
-from os.path import exists
+import os
 from datetime import date
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,11 +23,12 @@ GIT_FOLDER_PATH = "/home/rapha/Documents/Tutorials/LaTeX_Report_Measuring/"
 ###################################################################
 
 def main():
-
-    table_exists = exists(TABLE_FILE_PATH)
+    # Check if the given directories are valid
+    check_valid_directory(MAIN_TEX_FOLDER_PATH)
+    check_valid_directory(GIT_FOLDER_PATH)
 
     # This part initializes the table if it doesn't exist
-    if not table_exists:
+    if not os.path.exists(TABLE_FILE_PATH):
         with open(TABLE_FILE_PATH, 'w', newline='', encoding="utf8") as file:
             writer = csv.writer(file)
             # You can customize other fields you want to
@@ -248,6 +249,24 @@ def int_zero_assumption(value: str) -> int:
     except ValueError:
         print("Value was an invalid number, assuming zero")
         return 0
+
+def check_valid_directory(directory: str):
+    """Check if the given directory is valid and has read and write permissions.
+    
+    Args:
+        directory (str): The directory to be checked.
+        
+    Raises:
+        NotADirectoryError: If the given directory is not a valid directory.
+        PermissionError: If the given directory does not have read and write permissions.
+    """
+    if not os.path.isdir(directory):
+        print(f"Invalid directory: {directory}")
+        raise NotADirectoryError(f"Invalid directory: {directory}")
+
+    if not os.access(directory, os.R_OK) or not os.access(directory, os.W_OK):
+        print(f"Directory is not readable or writable: {directory}")
+        raise PermissionError(f"Directory is not readable or writable: {directory}")
 
 
 if __name__ == "__main__":
